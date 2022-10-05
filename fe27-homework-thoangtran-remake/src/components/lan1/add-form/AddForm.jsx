@@ -1,44 +1,55 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
+import { ReminderContext } from '../../../context/ReminderContext'
 import './style.scss'
 
 function AddForm(props) {
   const { onAddNewReminder } = props
+  const { handleAdd } = useContext(ReminderContext)
 
-  const [data, setData] = useState({
-    title: '',
-    date: '',
-  })
-
-  const [errors, setErrors] = useState([])
+  const [date, setDate] = useState()
+  const [title, setTitle] = useState()
+  const [dateDanger, setDateDanger] = useState()
+  const [titleDanger, setTitleDanger] = useState()
 
   const validate = () => {
+    let date_input = new Date(date)
+
+    const time = date_input.getTime()
+    console.log(time)
+
+    let dd = String(date_input.getDate()).padStart(2, '0')
+    let mm = String(date_input.getMonth() + 1).padStart(2, '0')
+    let yyyy = date_input.getFullYear()
+
+    date_input = dd + '/' + mm + '/' + yyyy
+    console.log(date_input)
     const date_regex = /^[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4}$/
-
-    if (errors === undefined) return
-
-    let _errors = new Set(errors)
-    console.log(data.title)
-
-    if (data.title === '') {
-      _errors = _errors.add('Bạn chưa nhập nội dung')
+    if (!title) {
+      setTitleDanger('Bạn chưa nhập nội dung')
+      return false
     }
-    if (data.title !== '') {
-      _errors.delete('Bạn chưa nhập nội dung')
+    if (!date) {
+      setDateDanger('Bạn chưa nhập ngày nhắc')
+      return false
     }
-    if (data.date === '') {
-      _errors = _errors.add('Bạn chưa nhập ngày nhắc')
+    if (!date_regex.test(date_input)) {
+      alert('Bạn nhập ngày nhắc không hợp lệ')
+      return false
     }
     // if (!date_regex.test(data.date)) {
     //   _errors = _errors.add('Bạn nhập ngày không hợp lệ')
+    //   return false
     // }
-    if (!date_regex.test(data.date)) {
-      alert('Bạn nhập ngày không hợp lệ')
+    // if (!date_regex.test(data.date)) {
+    //   alert('Bạn nhập ngày không hợp lệ')
+    //   return false
+    // }
+    if (date < today) {
+      alert('Bạn không được nhập ngày quá khứ')
+      return false
     }
-
-    console.log(_errors)
-
-    setErrors(Array.from(_errors))
+    return true
   }
 
   const handleSubmit = (e) => {
@@ -46,10 +57,9 @@ function AddForm(props) {
     if (!validate()) {
       return
     }
-    if (errors.size > 0) return
-    const newReminderData = { id: uuidv4(), ...data }
-    console.log(newReminderData)
-    onAddNewReminder(newReminderData)
+    validate()
+    const newReminderData = { id: uuidv4(), date, title }
+    handleAdd(newReminderData)
   }
 
   let today = new Date()
@@ -75,10 +85,7 @@ function AddForm(props) {
         <input
           type="text"
           onChange={(e) => {
-            setData({
-              ...data,
-              title: e.target.value,
-            })
+            setTitle(e.target.value)
           }}
           placeholder="Nhập nội dung của ngày"
           className="form-input"
@@ -93,10 +100,7 @@ function AddForm(props) {
           min={today}
           type={'date'}
           onChange={(e) => {
-            setData({
-              ...data,
-              date: e.target.value,
-            })
+            setDate(e.target.value)
           }}
           className="form-date"
           id="date"
@@ -106,14 +110,10 @@ function AddForm(props) {
         </button>
       </div>
       <div className="validation-message">
-        {console.log(Array.from(errors))}
-        {Array.from(errors)?.map((item) => {
-          return (
-            <div key={item} className="message">
-              {item}
-            </div>
-          )
-        })}
+        <div className="message">
+          <span>{!title ? titleDanger : ''}</span>
+          <span>{!date ? dateDanger : ''}</span>
+        </div>
       </div>
     </div>
   )

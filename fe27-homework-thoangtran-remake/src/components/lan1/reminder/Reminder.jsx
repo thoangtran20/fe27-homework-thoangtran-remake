@@ -5,17 +5,14 @@ import ReminderList from '../reminder-list/ReminderList'
 import './style.scss'
 
 function Reminder() {
-  const { listReminder, handleAdd, handleDelete } = useContext(ReminderContext)
-
-
-  console.log(listReminder)
+  const { handleAdd } = useContext(ReminderContext)
 
   return (
     <div className="Reminder">
       <h1 className="reminder-header">Nhắc nhở ngày quan trọng của bạn</h1>
       <div className="reminder-body">
         <AddForm onAddNewReminder={handleAdd} />
-        <ReminderList data={listReminder} onDeleteReminder={handleDelete} />
+        <ReminderList />
       </div>
     </div>
   )

@@ -66,4 +66,13 @@
   font-size: 14px;
   float: left;
   font-weight: 500;
+
+  .message {
+    display: flex;
+    flex-direction: column;
+
+    span {
+      font-weight: 500;
+    }
+  }
 }

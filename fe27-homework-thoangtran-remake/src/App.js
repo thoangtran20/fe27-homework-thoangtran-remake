@@ -14,24 +14,21 @@ function App() {
     console.log(localStorageListData)
     setReminderData(localStorageListData)
 
-    // localStorageListData.map((item) => {
-    //   if (compareWithToday(item.date)) {
-    //     alert(item.title)
-    //   }
-    // })
+    localStorageListData.map((item) => {
+      if (compareWithToday(item?.date)) {
+        alert(item?.title)
+      }
+    })
   }, [])
 
   const handleAddNewReminder = (newReminderData) => {
-    const oldlist = JSON.parse(get())
-    console.log(oldlist)
-    const newList = [newReminderData, ...oldlist]
-    console.log(newList)
+    const newList = [newReminderData, ...reminderData]
     setReminderData(newList)
     set(newList)
   }
 
   const handleDeleteReminder = (id) => {
-    const newList = reminderData.filter((item) => item.id !== id)
+    const newList = reminderData.filter((item) => item?.id !== id)
     setReminderData(newList)
     set(newList)
   }
