@@ -1,0 +1,33 @@
+.ReminderList {
+  flex: 1;
+  border: 1px solid green;
+  margin: 20px;
+  padding: 10px;
+  border-radius: 10px;
+
+  .reminder-item {
+    &.active {
+      background-color: #e74c3c;
+      color: #ecf0f1;
+      font-weight: 700;
+    }
+
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 5px;
+    margin-bottom: 5px;
+
+    .reminder-item-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+    }
+
+    .reminder-item-delete-button:hover {
+      cursor: pointer;
+    }
+  }
+}

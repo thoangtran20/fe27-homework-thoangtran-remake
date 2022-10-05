@@ -1,0 +1,16 @@
+.Reminder {
+  height: 100%;
+
+  .reminder-header {
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #483838;
+    font-size: 40px;
+    text-align: center;
+    text-justify: 40px;
+  }
+
+  .reminder-body {
+    display: flex;
+  }
+}
