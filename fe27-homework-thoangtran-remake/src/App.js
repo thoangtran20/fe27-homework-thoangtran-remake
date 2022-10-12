@@ -1,17 +1,28 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { clientServer } from './server/ClientServer'
 import './App.css'
 // import { REMINDER_LIST_KEY } from './components/const'
 import Reminder from './components/lan1/reminder/Reminder'
 import { compareWithToday } from './components/utils/index,'
 import { ReminderContext } from './context/ReminderContext'
+import { observer } from 'mobx-react'
 
-function App() {
+
+const App = observer(({ store: reminderListStore }) => {
   // const { set, get } = localStorageUtil(REMINDER_LIST_KEY, [])
-  const [reminderData, setReminderData] = useState([])
+  // const [reminderData, setReminderData] = useState([])
+
+  console.log(reminderListStore.listRemindersCount)
+  console.log(reminderListStore.getListReminders())
+
+  const setReminderData = (reminderData) => {
+    reminderListStore.setListReminders(reminderData)
+  }
+
+  const reminderData = reminderListStore.getListReminders()
 
   useEffect(() => {
-    fetchReminderList()
+    reminderListStore.fetchListReminders()
 
     // const localStorageListData = JSON.parse(get())
     // // console.log(localStorageListData)
@@ -24,22 +35,22 @@ function App() {
     // })
   }, [])
 
-  const fetchReminderList = () => {
-    clientServer
-      .get('listReminders')
-      .then((res) => {
-        setReminderData((res.data ?? []).reverse())
-        console.log(res);
-        res.data.map((item) => {
-          if (compareWithToday(item?.date)) {
-            alert(item?.title)
-          }
-        })
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-  }
+  // const fetchReminderList = () => {
+  //   clientServer
+  //     .get('listReminders')
+  //     .then((res) => {
+  //       setReminderData((res.data ?? []).reverse())
+  //       console.log(res);
+  //       res.data.map((item) => {
+  //         if (compareWithToday(item?.date)) {
+  //           alert(item?.title)
+  //         }
+  //       })
+  //     })
+  //     .catch((err) => {
+  //       console.log(err)
+  //     })
+  // }
 
   const handleAddNewReminder = (newReminderData) => {
     // const newList = [newReminderData, ...reminderData]
@@ -49,7 +60,7 @@ function App() {
       .post('listReminders', newReminderData)
       .then((res) => {
         console.log(res)
-        fetchReminderList()
+        reminderListStore.fetchListReminders()
       })
       .catch((err) => {
         console.log(err)
@@ -64,7 +75,7 @@ function App() {
       .delete(`listReminders/${id}`)
       .then((res) => {
         console.log(res)
-        fetchReminderList()
+        reminderListStore.fetchListReminders()
       })
       .catch((err) => {
         console.log(err)
@@ -84,6 +95,6 @@ function App() {
       </ReminderContext.Provider>
     </div>
   )
-}
+})
 
 export default App
