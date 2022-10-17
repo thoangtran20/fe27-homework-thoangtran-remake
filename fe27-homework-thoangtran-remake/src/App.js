@@ -6,51 +6,47 @@ import Reminder from './components/lan1/reminder/Reminder'
 import { compareWithToday } from './components/utils/index,'
 import { ReminderContext } from './context/ReminderContext'
 import { observer } from 'mobx-react'
+import { useDispatch, useSelector } from 'react-redux'
+import { setReminderList } from './redux/slice/remiderSlice'
 
-
-const App = observer(({ store: reminderListStore }) => {
+const App = () => {
   // const { set, get } = localStorageUtil(REMINDER_LIST_KEY, [])
   // const [reminderData, setReminderData] = useState([])
 
-  console.log(reminderListStore.listRemindersCount)
-  console.log(reminderListStore.getListReminders())
+  const reminderData = useSelector((state) => state.reminderReducer.data)
+  console.log(reminderData)
 
-  const setReminderData = (reminderData) => {
-    reminderListStore.setListReminders(reminderData)
-  }
+  const dispatch = useDispatch()
 
-  const reminderData = reminderListStore.getListReminders()
+  // console.log(reminderListStore.listRemindersCount)
+  // console.log(reminderListStore.getListReminders())
+
+  // const setReminderData = (reminderData) => {
+  //   reminderListStore.setListReminders(reminderData)
+  // }
+
+  // const reminderData = reminderListStore.getListReminders()
 
   useEffect(() => {
-    reminderListStore.fetchListReminders()
-
-    // const localStorageListData = JSON.parse(get())
-    // // console.log(localStorageListData)
-    // // setReminderData(localStorageListData)
-
-    // localStorageListData.map((item) => {
-    //   if (compareWithToday(item?.date)) {
-    //     alert(item?.title)
-    //   }
-    // })
+    fetchReminderList()
   }, [])
 
-  // const fetchReminderList = () => {
-  //   clientServer
-  //     .get('listReminders')
-  //     .then((res) => {
-  //       setReminderData((res.data ?? []).reverse())
-  //       console.log(res);
-  //       res.data.map((item) => {
-  //         if (compareWithToday(item?.date)) {
-  //           alert(item?.title)
-  //         }
-  //       })
-  //     })
-  //     .catch((err) => {
-  //       console.log(err)
-  //     })
-  // }
+  const fetchReminderList = () => {
+    clientServer
+      .get('listReminders')
+      .then((res) => {
+        dispatch(setReminderList(res.data ?? []))
+        console.log(res)
+        res.data.map((item) => {
+          if (compareWithToday(item?.date)) {
+            alert(item?.title)
+          }
+        })
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
 
   const handleAddNewReminder = (newReminderData) => {
     // const newList = [newReminderData, ...reminderData]
@@ -60,7 +56,7 @@ const App = observer(({ store: reminderListStore }) => {
       .post('listReminders', newReminderData)
       .then((res) => {
         console.log(res)
-        reminderListStore.fetchListReminders()
+        fetchReminderList()
       })
       .catch((err) => {
         console.log(err)
@@ -75,7 +71,7 @@ const App = observer(({ store: reminderListStore }) => {
       .delete(`listReminders/${id}`)
       .then((res) => {
         console.log(res)
-        reminderListStore.fetchListReminders()
+        fetchReminderList()
       })
       .catch((err) => {
         console.log(err)
@@ -95,6 +91,6 @@ const App = observer(({ store: reminderListStore }) => {
       </ReminderContext.Provider>
     </div>
   )
-})
+}
 
 export default App
