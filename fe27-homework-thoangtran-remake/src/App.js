@@ -8,6 +8,7 @@ import { ReminderContext } from './context/ReminderContext'
 import { observer } from 'mobx-react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchReminderList, setReminderList } from './redux/slice/remiderSlice'
+import { fetchReminderListAsync } from './redux/saga/reminderSaga'
 
 const App = () => {
   // const { set, get } = localStorageUtil(REMINDER_LIST_KEY, [])
@@ -28,7 +29,7 @@ const App = () => {
   // const reminderData = reminderListStore.getListReminders()
 
   useEffect(() => {
-    dispatch(fetchReminderList())
+    dispatch(fetchReminderListAsync())
   }, [])
 
   // const fetchReminderList = () => {

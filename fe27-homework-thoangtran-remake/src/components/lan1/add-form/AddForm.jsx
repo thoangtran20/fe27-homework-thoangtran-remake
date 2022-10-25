@@ -2,7 +2,8 @@ import { useContext, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { v4 as uuidv4 } from 'uuid'
 import { ReminderContext } from '../../../context/ReminderContext'
-import { addRemiderListAsync } from '../../../redux/slice/remiderSlice'
+import { addReminderListAsync } from '../../../redux/saga/reminderSaga'
+// import { addReminderListAsync } from '../../../redux/slice/remiderSlice'
 import './style.scss'
 
 function AddForm(props) {
@@ -63,7 +64,7 @@ function AddForm(props) {
     }
     validate()
     const newReminderData = { id: uuidv4(), date, title }
-    dispatch(addRemiderListAsync(newReminderData))
+    dispatch(addReminderListAsync(newReminderData))
   }
 
   let today = new Date()
