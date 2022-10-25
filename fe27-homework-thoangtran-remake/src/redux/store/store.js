@@ -5,6 +5,6 @@ const rootReducer = {
   reminderReducer: reminderReducer,
 }
 
-export const store = configureStore({
+export const appStore = configureStore({
   reducer: rootReducer,
 })
